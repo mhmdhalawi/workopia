@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Job;
+
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -9,34 +11,17 @@ class JobController extends Controller
     //
     public function index()
     {
-        return response()->json([
-            [
-                'id' => 1,
-                'title' => 'Software Engineer',
-                'company' => 'Tech Company',
-                'location' => 'Remote',
-                'description' => 'Develop and maintain software applications.',
-            ],
-            [
-                'id' => 2,
-                'title' => 'Data Analyst',
-                'company' => 'Data Corp',
-                'location' => 'On-site',
-                'description' => 'Analyze and interpret complex data sets.',
-            ],
-        ]);
+        return response()->json(
+            Job::all()
+        );
     }
 
     public function show(string $id)
     {
         // Logic to display a specific job listing
-        return response()->json([
-            'id' => $id,
-            'title' => 'Software Engineer',
-            'company' => 'Tech Company',
-            'location' => 'Remote',
-            'description' => 'Develop and maintain software applications.',
-        ]);
+        return response()->json(
+            Job::find($id)
+        );
     }
 
     public function store(Request $request)
