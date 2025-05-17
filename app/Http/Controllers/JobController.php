@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Job;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class JobController extends Controller
 {
@@ -26,10 +27,21 @@ class JobController extends Controller
 
     public function store(Request $request)
     {
-        // Logic to store a new job listing
-        return response()->json([
-            'message' => 'Job listing created successfully.',
-            'data' => $request->all(),
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+            ], [
+                'title.string' => 'The title must be a text.',
+            ]);
+
+            $job = Job::create($validatedData);
+            return response()->json($job, 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed.',
+                'errors' => $e->errors()
+            ], 400); // Custom error code, e.g., 400 Bad Request
+        }
     }
 }
