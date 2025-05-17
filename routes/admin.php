@@ -6,4 +6,4 @@ use Illuminate\Support\Facades\Route;
 
 
 // Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
-Route::resource('jobs', JobController::class)->only(['index', 'show', 'store']);
+Route::resource('jobs', JobController::class);
