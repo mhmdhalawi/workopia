@@ -20,6 +20,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
 
+            $request->session()->regenerate();
+
 
             // Authentication passed...
             return response()->json([
@@ -63,8 +65,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        session()->forget('user');
-        session()->flush();
+        // session()->flush();
         // Optionally, you can return a response
         return response()->json([
             'message' => 'Logout successful',

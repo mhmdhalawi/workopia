@@ -13,4 +13,4 @@ Route::post('auth/register', [AuthController::class, 'register'])->name('auth.re
 Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 
-Route::resource('jobs', JobController::class);
+Route::resource('jobs', JobController::class)->middleware('auth:sanctum');

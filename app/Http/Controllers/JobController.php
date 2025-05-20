@@ -9,7 +9,6 @@ use Illuminate\Validation\ValidationException;
 
 class JobController extends Controller
 {
-    //
     public function index()
     {
         return response()->json(
@@ -19,10 +18,23 @@ class JobController extends Controller
 
     public function show(string $id)
     {
-        // Logic to display a specific job listing
-        return response()->json(
-            Job::find($id)
-        );
+        $user = request()->user();
+
+
+        if ($user->is_admin) {
+            return response()->json(
+                Job::find($id)
+            );
+        }
+
+        $job = Job::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$job) {
+            return response()->json(['message' => 'Job not found'], 404);
+        }
+        return response()->json($job);
     }
 
     public function store(Request $request)
