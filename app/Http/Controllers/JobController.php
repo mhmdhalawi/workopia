@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Job;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class JobController extends Controller
@@ -18,23 +19,17 @@ class JobController extends Controller
 
     public function show(string $id)
     {
-        $user = request()->user();
-
-
-        if ($user->is_admin) {
-            return response()->json(
-                Job::find($id)
-            );
-        }
-
-        $job = Job::where('id', $id)
-            ->where('user_id', $user->id)
-            ->first();
+        $job = Job::find($id);
 
         if (!$job) {
             return response()->json(['message' => 'Job not found'], 404);
         }
-        return response()->json($job);
+
+        Gate::authorize('view',  $job);
+
+        return response()->json(
+            $job
+        );
     }
 
     public function store(Request $request)
@@ -84,7 +79,6 @@ class JobController extends Controller
 
     public function update(Request $request, string $id)
     {
-        // Logic to update a specific job listing
         $job = Job::find($id);
         if (!$job) {
             return response()->json(['message' => 'Job not found'], 404);
