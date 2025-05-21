@@ -25,8 +25,6 @@ class JobController extends Controller
             return response()->json(['message' => 'Job not found'], 404);
         }
 
-        Gate::authorize('view',  $job);
-
         return response()->json(
             $job
         );
@@ -34,6 +32,9 @@ class JobController extends Controller
 
     public function store(Request $request)
     {
+
+        Gate::authorize('create');
+
         try {
 
             $validatedData = $request->validate([
@@ -80,9 +81,12 @@ class JobController extends Controller
     public function update(Request $request, string $id)
     {
         $job = Job::find($id);
+
         if (!$job) {
             return response()->json(['message' => 'Job not found'], 404);
         }
+
+        Gate::authorize('modify', $job);
 
         $validatedData = $request->validate([
             'title' => 'sometimes|required|string|max:255',
@@ -115,12 +119,14 @@ class JobController extends Controller
     }
     public function destroy(string $id)
     {
-        // Logic to delete a specific job listing
         $job = Job::find($id);
+
         if (!$job) {
             return response()->json(['message' => 'Job not found'], 404);
         }
-        // delete logo if exists
+
+        Gate::authorize('modify', $job);
+
         if ($job->company_logo) {
             $path = public_path('storage/' . $job->company_logo);
             if (file_exists($path)) {
