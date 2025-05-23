@@ -33,7 +33,8 @@ class JobController extends Controller
     public function store(Request $request)
     {
 
-        Gate::authorize('create');
+        Gate::authorize('create', Job::class);
+
 
         try {
 
@@ -56,11 +57,11 @@ class JobController extends Controller
                 'company_description' => 'nullable|string',
                 'company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'company_website' => 'nullable|url|max:255',
-                'user_id' => 'required|uuid',
             ], [
                 'title.string' => 'The title must be a text.',
             ]);
 
+            $validatedData['user_id'] = $request->user()->id;
 
 
             if ($request->hasFile('company_logo')) {
