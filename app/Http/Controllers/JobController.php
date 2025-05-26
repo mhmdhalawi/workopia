@@ -13,7 +13,7 @@ class JobController extends Controller
     public function index()
     {
         return response()->json(
-            Job::all()
+            Job::paginate(3)
         );
     }
 
