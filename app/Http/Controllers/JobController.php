@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\JobResource;
 use App\Models\Job;
 
 use Illuminate\Http\Request;
@@ -12,8 +13,10 @@ class JobController extends Controller
 {
     public function index()
     {
+        $jobs = Job::paginate(3);
+
         return response()->json(
-            Job::paginate(3)
+            $jobs->toResourceCollection()
         );
     }
 
@@ -25,8 +28,10 @@ class JobController extends Controller
             return response()->json(['message' => 'Job not found'], 404);
         }
 
+        // $job = new JobResource($job);
+
         return response()->json(
-            $job
+            $job->toResource()
         );
     }
 

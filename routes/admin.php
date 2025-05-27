@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ProfileController;
@@ -17,4 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::patch('bookmarks/{jobId}', [BookmarkController::class, 'toggleBookmark'])->name('bookmarks.toggle');
+    Route::apiResource('bookmarks', BookmarkController::class)->only(['index', 'show']);
 });
