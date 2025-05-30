@@ -92,7 +92,7 @@ class JobController extends Controller
             return response()->json(['message' => 'Job not found'], 404);
         }
 
-        Gate::authorize('modify', $job);
+        Gate::authorize('modify', $job->user_id);
 
         $validatedData = $request->validate([
             'title' => 'sometimes|required|string|max:255',
@@ -131,7 +131,7 @@ class JobController extends Controller
             return response()->json(['message' => 'Job not found'], 404);
         }
 
-        Gate::authorize('modify', $job);
+        Gate::authorize('modify', $job->user_id);
 
         if ($job->company_logo) {
             $path = public_path('storage/' . $job->company_logo);

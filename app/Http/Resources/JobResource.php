@@ -14,11 +14,10 @@ class JobResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
         return array_merge(
             $this->resource->toArray(), // All model attributes
             [
-                'is_bookmarked' => $this->bookmarks->contains(request()->user()->id), // Bookmark status
+                'is_bookmarked' => $this->bookmarks->contains($request->user()->id), // Bookmark status
             ]
         );
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\JobController;
@@ -16,4 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::patch('bookmarks/{jobId}', [BookmarkController::class, 'toggleBookmark'])->name('bookmarks.toggle');
     Route::apiResource('bookmarks', BookmarkController::class)->only(['index', 'show']);
+
+    Route::apiResource('applicants', ApplicantController::class);
 });
