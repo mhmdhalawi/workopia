@@ -142,4 +142,47 @@ class JobController extends Controller
         $job->delete();
         return response()->json(['message' => 'Job deleted successfully']);
     }
+
+    public function search(Request $request)
+    {
+        $query = Job::query();
+
+        if ($request->has('title')) {
+            $query->where('title', 'ILIKE', '%' . $request->input('title') . '%');
+        }
+
+        if ($request->has('location')) {
+            $query->where('city', 'ILIKE', '%' . $request->input('location') . '%')
+                ->orWhere('state', 'ILIKE', '%' . $request->input('location') . '%');
+        }
+
+        if ($request->has('job_type')) {
+            $query->where('job_type', $request->input('job_type'));
+        }
+
+        if ($request->has('remote')) {
+            $query->where('remote', $request->input('remote'));
+        }
+
+        if ($request->has('salary_min')) {
+            $query->where('salary', '>=', $request->input('salary_min'));
+        }
+
+        if ($request->has('salary_max')) {
+            $query->where('salary', '<=', $request->input('salary_max'));
+        }
+
+        if ($request->has('tags')) {
+            $tags = explode(',', $request->input('tags'));
+            foreach ($tags as $tag) {
+                $query->orWhere('tags', 'ILIKE', '%' . trim($tag) . '%');
+            }
+        }
+
+        $jobs = $query->paginate(3);
+
+        return response()->json(
+            $jobs->toResourceCollection()
+        );
+    }
 }

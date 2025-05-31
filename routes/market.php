@@ -13,6 +13,7 @@ Route::post('auth/register', [AuthController::class, 'register'])->name('auth.re
 Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('jobs/search', [JobController::class, 'search'])->name('jobs.search');
     Route::apiResource('jobs', JobController::class)->only(['index', 'show']);
 
     Route::patch('bookmarks/{jobId}', [BookmarkController::class, 'toggleBookmark'])->name('bookmarks.toggle');
