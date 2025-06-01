@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\JobResource;
+use App\Mail\JobApplied;
 use App\Models\Applicant;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class ApplicantController extends Controller
@@ -65,8 +67,10 @@ class ApplicantController extends Controller
         // Create the applicant
         $applicant = Applicant::create($data);
 
+        Mail::to($applicant->contact_email)->send(new JobApplied($applicant));
+
         return response()->json(
-            $applicant,
+            $applicant->toResourceArray(),
             201,
         );
     }
